@@ -55,7 +55,7 @@ function Home() {
     <div>
       <header className="fixed inset-x-0 top-0 z-40 border-b bg-background/90 backdrop-blur">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5">
-          <a href="#topo" aria-label="Pata Solidária, início"><Logo className="h-12" /></a>
+          <a href="#topo" aria-label="Pata Solidária, início"><Logo className="h-14" /></a>
           <nav aria-label="Principal" className="hidden items-center gap-6 text-sm font-semibold lg:flex">
             {nav.map(([id, l]) => <a key={id} href={`#${id}`} className="hover:text-accent">{l}</a>)}
           </nav>

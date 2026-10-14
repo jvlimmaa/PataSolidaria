@@ -49,7 +49,7 @@ function Usuario() {
 
       <main className="space-y-5 p-5">
         {tab === "inicio" && (<>
-          <h1 className="text-3xl font-bold">Olá, Marina! 🐾</h1>
+          <h1 className="text-3xl font-bold">Olá, Marina!</h1>
           <div className="rounded-3xl bg-primary p-6 text-primary-foreground shadow-soft">
             <p className="text-sm opacity-80">Minha contribuição mensal</p>
             <p className="font-display text-5xl font-bold">{brl(30)}</p>
@@ -61,7 +61,7 @@ function Usuario() {
               <p className="mt-1 text-sm">Atualize sua forma de pagamento para continuar ajudando.</p>
               <button className={`${btn.primary} mt-3 w-full`} onClick={() => setModal("pag")}>Atualizar forma de pagamento</button>
             </div>
-          ) : <p className="rounded-3xl bg-success p-5 font-bold text-success-foreground">Tudo certo! Sua contribuição está em dia. 💚</p>}
+          ) : <p className="rounded-3xl bg-success p-5 font-bold text-success-foreground">Tudo certo! Sua contribuição está em dia.</p>}
         </>)}
         {tab === "hist" && (<><h1 className="text-2xl font-bold">Histórico de contribuições</h1>
           <div className="divide-y rounded-3xl border bg-card">{hist.map(([d, v], k) => <div key={k} className="flex justify-between p-4"><span>{dataBR(d)}</span><b>{brl(v)}</b></div>)}</div></>)}
