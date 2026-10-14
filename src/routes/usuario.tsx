@@ -29,7 +29,7 @@ function Usuario() {
   const [servs, setServs] = useState([{ i: "Passeio com cães", q: "2 h", d: "2026-09-18" }]);
   const [modal, setModal] = useState<null | "pag" | "bem" | "serv">(null);
   const [prefs, setPrefs] = useState({ email: true, whats: false });
-  const fd = (e: React.FormEvent) => { e.preventDefault(); return Object.fromEntries(new FormData(e.target as HTMLFormElement)) as Record<string, string>; };
+  const fd = (e: React.FormEvent) => { e.preventDefault(); return Object.fromEntries(new FormData(e.target as HTMLFormElement)) as any; };
   const close = () => setModal(null);
   const hoje = new Date("2026-10-14").getTime();
   const dias = Math.round((new Date(venc).getTime() - hoje) / 86400000);
@@ -71,7 +71,7 @@ function Usuario() {
           <div className="rounded-3xl border bg-card p-5"><p className="text-sm text-muted-foreground">Nome</p><p className="font-bold">Marina Souza (fictício)</p><p className="mt-3 text-sm text-muted-foreground">E-mail</p><p className="font-bold">marina@exemplo.com</p></div>
           <div className="space-y-4 rounded-3xl border bg-card p-5">
             <p className="font-bold">Preferências de lembrete</p>
-            {[["email", "Lembrete por e-mail"], ["whats", "Lembrete por WhatsApp"]].map(([k, l]) => <div key={k} className="flex items-center justify-between"><span id={k}>{l}</span><Switch aria-labelledby={k} checked={prefs[k as "email"]} onCheckedChange={(c) => setPrefs({ ...prefs, [k]: c })} /></div>)}
+            {[["email", "Lembrete por e-mail"], ["whats", "Lembrete por WhatsApp"]].map(([k, l]) => <div key={k} className="flex items-center justify-between"><span id={k}>{l}</span><Switch aria-labelledby={k} checked={prefs[k as "email"]} onCheckedChange={(c) => setPrefs({ ...prefs, [k as string]: c })} /></div>)}
             <div className="flex items-center justify-between"><span id="al">Avisar 15 dias antes</span><Switch aria-labelledby="al" checked={alerta} onCheckedChange={setAlerta} /></div>
           </div></>)}
       </main>

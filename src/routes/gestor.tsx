@@ -38,7 +38,7 @@ function Gestor() {
   const fila = donors.filter((d) => d.status !== "Ativo");
   const lista = useMemo(() => donors.filter((d) => (f === "Todos" || d.status === f) && (d.nome + d.email).toLowerCase().includes(q.toLowerCase())), [donors, q, f]);
   const close = () => { setModal(null); setDupe(false); };
-  const fd = (e: React.FormEvent) => { e.preventDefault(); return Object.fromEntries(new FormData(e.target as HTMLFormElement)) as Record<string, string>; };
+  const fd = (e: React.FormEvent) => { e.preventDefault(); return Object.fromEntries(new FormData(e.target as HTMLFormElement)) as any; };
 
   const Head = ({ t, action, label, m }: { t: string; action?: boolean; label?: string; m?: typeof modal }) => (
     <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
@@ -146,7 +146,7 @@ function Gestor() {
           <Field label="Quem" name="quem" required /><Field label="O quê" name="o_que" required /><Field label="Horas" name="horas" type="number" min="1" required /><button className={`${btn.primary} w-full`}>Registrar</button></form>
       </Modal>
       <Modal open={modal === "lembrete"} onClose={close} title="Pré-visualização da mensagem">
-        <p className="rounded-2xl bg-muted p-4 text-sm">Olá, {alvo.length === 1 ? alvo[0].nome.split(" ")[0] : "[nome]"}! Sua contribuição mensal na Pata Solidária está perto do vencimento. Atualize sua forma de pagamento para continuar ajudando os animais. Obrigado!</p>
+        <p className="rounded-2xl bg-muted p-4 text-sm">Olá, {alvo.length === 1 ? alvo[0]?.nome.split(" ")[0] : "[nome]"}! Sua contribuição mensal na Pata Solidária está perto do vencimento. Atualize sua forma de pagamento para continuar ajudando os animais. Obrigado!</p>
         <p className="my-3 text-sm text-muted-foreground">Destinatários: {alvo.map((a) => a.nome).join(", ")}</p>
         <button className={`${btn.accent} w-full`} onClick={() => { toast.success(`${alvo.length} lembrete(s) enviado(s) (simulado).`); close(); }}>Confirmar envio</button>
       </Modal>

@@ -24,7 +24,7 @@ function Reveal({ children, className = "" }: { children: ReactNode; className?:
   const [on, setOn] = useState(false);
   useEffect(() => {
     const el = ref.current; if (!el) return;
-    const io = new IntersectionObserver(([e]) => e.isIntersecting && (setOn(true), io.disconnect()), { threshold: 0.1 });
+    const io = new IntersectionObserver(([e]) => e?.isIntersecting && (setOn(true), io.disconnect()), { threshold: 0.1 });
     io.observe(el); return () => io.disconnect();
   }, []);
   return <div ref={ref} className={`${className} transition-all duration-700 ${on ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>{children}</div>;
@@ -192,7 +192,7 @@ function Home() {
               ["Funciona no celular?", "Sim. A tela do Colaborador foi pensada primeiro para o celular."],
               ["Serve só para causa animal?", "Nasceu nesse contexto, mas o fluxo pode atender outras ONGs."],
             ].map(([q, a]) => (
-              <AccordionItem key={q} value={q}><AccordionTrigger className="text-left text-base font-bold">{q}</AccordionTrigger><AccordionContent className="text-muted-foreground">{a}</AccordionContent></AccordionItem>
+              <AccordionItem key={q} value={q ?? ""}><AccordionTrigger className="text-left text-base font-bold">{q}</AccordionTrigger><AccordionContent className="text-muted-foreground">{a}</AccordionContent></AccordionItem>
             ))}
           </Accordion>
         </Section>
