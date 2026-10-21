@@ -1,5 +1,13 @@
 {
   "version": "7",
   "dialect": "postgresql",
-  "entries": []
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1792583466372,
+      "tag": "0000_pata_solidaria_schema",
+      "breakpoints": true
+    }
+  ]
 }
