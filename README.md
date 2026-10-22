@@ -1,7 +1,5 @@
 # Patasolidaria
 
-essa é a logo do projeto
-
 This project was built with [Lovable](https://lovable.dev).
 
 **Live app**: https://patasolidaria.lovable.app
