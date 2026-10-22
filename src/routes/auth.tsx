@@ -26,7 +26,7 @@ export const Route = createFileRoute("/auth")({
   component: AuthPage,
 });
 
-async function landingFor(userId: string): Promise"/gestor" | "/usuario" {
+async function landingFor(userId: string): Promise<"/gestor" | "/usuario"> {
   const { data: roles } = await supabase.from("user_roles").select("role").eq("user_id", userId);
   return roles?.some((r) => r.role === "gestor") ? "/gestor" : "/usuario";
 }
@@ -64,8 +64,11 @@ function AuthPage() {
 
   const google = async () => {
     // Redireciona para o Google e volta ao site; a sessão é detectada ao retornar.
-    const r = await (await import("@/integrations/lovable")).lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin });
-    if (r.error) toast.error("Não foi possível iniciar o login com Google: " + r.error.message);
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: { redirectTo: window.location.origin + "/auth" },
+    });
+    if (error) toast.error("Não foi possível iniciar o login com Google: " + error.message);
   };
 
   return (

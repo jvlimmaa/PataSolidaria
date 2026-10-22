@@ -1,10 +1,10 @@
-import { createFileRoute, Link, redirect } from "@tanstack/react-router";
+import { createFileRoute, Link, redirect, useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { LayoutDashboard, HandCoins, Package, HeartHandshake, BellRing, FileBarChart, Plus, Search, ArrowLeft, LogOut } from "lucide-react";
 import { Logo, Modal, Field, btn, StatusBadge } from "@/components/app/ui-bits";
-import { brl, dataBR, statusDe, meses, type Donor, type Bem, type Servico } from "@/lib/demo-data";
+import { brl, dataBR, statusDe, type Donor, type Bem, type Servico } from "@/lib/demo-data";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuthStateSync, signOut } from "@/lib/auth";
 
@@ -24,6 +24,10 @@ export const Route = createFileRoute("/_authenticated/gestor")({
     const { data: roles } = await supabase.from("user_roles").select("role").eq("user_id", data.user.id);
     if (!roles?.some((r) => r.role === "gestor")) throw redirect({ to: "/usuario" });
   },
+  loader: async () => {
+    const { data } = await supabase.auth.getUser();
+    return { userId: data.user?.id ?? "" };
+  },
   component: Gestor,
 });
 
@@ -35,11 +39,14 @@ const tabs = [
 
 const th = "px-4 py-3 text-left text-xs font-bold uppercase tracking-wide text-muted-foreground";
 const td = "px-4 py-3";
+const MESES = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"];
 const Wrap = ({ children }: { children: React.ReactNode }) => <div className="overflow-x-auto rounded-3xl border bg-card">{children}</div>;
 
 function Gestor() {
   useAuthStateSync();
+  const { userId } = Route.useLoaderData();
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
   const [tab, setTab] = useState<(typeof tabs)[number]["id"]>("geral");
   const [modal, setModal] = useState<null | "donor" | "bem" | "serv" | "lembrete">(null);
   const [q, setQ] = useState(""); const [f, setF] = useState("Todos");
@@ -73,7 +80,7 @@ function Gestor() {
 
   const salvar = useMutation({
     mutationFn: async ({ tabela, row }: { tabela: "contributions" | "bens" | "servicos"; row: Record<string, unknown> }) => {
-      const { error } = await supabase.from(tabela).insert(row);
+      const { error } = await (supabase.from(tabela) as any).insert(row);
       if (error) throw error;
     },
     onSuccess: () => {
@@ -86,7 +93,7 @@ function Gestor() {
 
   const enviarLembretes = useMutation({
     mutationFn: async ({ ids, destinatarios, mensagem }: { ids: (string | null)[]; destinatarios: string; mensagem: string }) => {
-      const { error } = await supabase.from("reminders").insert(ids.map((cid) => ({ contribution_id: cid, destinatarios, mensagem })));
+      const { error } = await supabase.from("reminders").insert(ids.map((cid) => ({ contribution_id: cid, destinatarios, mensagem, user_id: userId })));
       if (error) throw error;
     },
     onSuccess: (_d, v) => {
@@ -101,6 +108,18 @@ function Gestor() {
   const lista = useMemo(() => donors.filter((d) => (f === "Todos" || statusDe(d.vencimento) === f) && (d.nome + d.email).toLowerCase().includes(q.toLowerCase())), [donors, q, f]);
   const close = () => { setModal(null); setDupe(false); };
   const fd = (e: React.FormEvent) => { e.preventDefault(); return Object.fromEntries(new FormData(e.target as HTMLFormElement)) as any; };
+
+  // Contribuições somadas por mês de vencimento, para o gráfico de barras.
+  const porMes = useMemo(() => {
+    const soma = new Map<string, number>();
+    for (const d of donors) {
+      const k = d.vencimento.slice(0, 7);
+      if (!/^\d{4}-\d{2}$/.test(k)) continue;
+      soma.set(k, (soma.get(k) ?? 0) + d.valor);
+    }
+    return [...soma.entries()].sort().slice(-6).map(([k, v]) => ({ m: MESES[Number(k.slice(5, 7)) - 1] ?? k.slice(5, 7), v }));
+  }, [donors]);
+  const topo = Math.max(...porMes.map((x) => x.v), 1);
 
   const Head = ({ t, action, label, m }: { t: string; action?: boolean; label?: string; m?: typeof modal }) => (
     <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
@@ -118,32 +137,32 @@ function Gestor() {
             <button key={t.id} onClick={() => setTab(t.id)} aria-current={tab === t.id} className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-left font-semibold ${tab === t.id ? "bg-sidebar-primary text-sidebar-primary-foreground" : "hover:bg-sidebar-accent"}`}><t.i className="h-5 w-5" />{t.l}</button>
           ))}
         </nav>
-        <button onClick={() => signOut(queryClient, navigate)} className="rounded-xl px-3 py-2 text-left text-sm font-semibold hover:bg-sidebar-accent">Sair da conta</button>
+        <button onClick={async () => { await signOut(queryClient); navigate({ to: "/auth", replace: true }); }} className="rounded-xl px-3 py-2 text-left text-sm font-semibold hover:bg-sidebar-accent">Sair da conta</button>
         <Link to="/" className="rounded-xl px-3 py-2 text-sm font-semibold hover:bg-sidebar-accent">Voltar ao site</Link>
       </aside>
 
       <div className="min-w-0 flex-1 pb-24 md:pb-0">
         <div className="flex flex-wrap items-center justify-between gap-2 border-b bg-card px-5 py-3">
           <div className="flex items-center gap-2 md:hidden"><Link to="/" aria-label="Voltar ao site" className="rounded-full p-2 hover:bg-muted"><ArrowLeft className="h-5 w-5" /></Link><Logo className="h-9" /></div>
-          <button onClick={() => signOut(queryClient, navigate)} className="inline-flex items-center gap-1 text-sm font-bold"><LogOut className="h-4 w-4" />Sair</button>
+          <button onClick={async () => { await signOut(queryClient); navigate({ to: "/auth", replace: true }); }} className="inline-flex items-center gap-1 text-sm font-bold"><LogOut className="h-4 w-4" />Sair</button>
         </div>
 
         <main className="mx-auto max-w-5xl p-5 sm:p-8">
           {tab === "geral" && (<>
             <Head t="Visão geral" />
             <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-              {[["Doadores ativos", donors.filter((d) => statusDe(d.vencimento) === "Ativo").length + 36], ["Renovações em 30 dias", fila.length], ["Bens no mês", bens.length + 14], ["Serviços registrados", servs.length + 9]].map(([l, v]) => (
+              {[["Doadores ativos", donors.filter((d) => statusDe(d.vencimento) === "Ativo").length], ["Renovações em 30 dias", fila.length], ["Bens registrados", bens.length], ["Serviços registrados", servs.length]].map(([l, v]) => (
                 <div key={l} className="rounded-3xl border bg-card p-5"><p className="font-display text-4xl font-bold text-primary">{v}</p><p className="mt-1 text-sm text-muted-foreground">{l}</p></div>
               ))}
             </div>
             <div className="mt-6 rounded-3xl border bg-card p-6">
               <h2 className="mb-4 text-lg font-bold">Contribuições por mês</h2>
-              <svg viewBox="0 0 360 180" className="w-full" role="img" aria-label="Gráfico de barras das contribuições por mês">
-                {meses.map((m, i) => { const h = (m.v / 3000) * 140; return (<g key={m.m}>
-                  <rect x={20 + i * 57} y={150 - h} width="38" height={h} rx="8" fill={i === 5 ? "var(--accent)" : "var(--primary)"} />
+              {porMes.length ? <svg viewBox="0 0 360 180" className="w-full" role="img" aria-label="Gráfico de barras das contribuições por mês">
+                {porMes.map((m, i) => { const h = Math.max((m.v / topo) * 140, 4); return (<g key={m.m + i}>
+                  <rect x={20 + i * 57} y={150 - h} width="38" height={h} rx="8" fill={i === porMes.length - 1 ? "var(--accent)" : "var(--primary)"} />
                   <text x={39 + i * 57} y={168} textAnchor="middle" fontSize="11" fill="var(--muted-foreground)">{m.m}</text>
-                  <text x={39 + i * 57} y={144 - h} textAnchor="middle" fontSize="10" fill="var(--foreground)">{m.v}</text></g>); })}
-              </svg>
+                  <text x={39 + i * 57} y={144 - h} textAnchor="middle" fontSize="10" fill="var(--foreground)">{m.v.toLocaleString("pt-BR")}</text></g>); })}
+              </svg> : <p className="text-sm text-muted-foreground">Nenhuma contribuição registrada ainda — o gráfico aparece assim que houver lançamentos.</p>}
             </div>
           </>)}
 
@@ -181,7 +200,7 @@ function Gestor() {
 
           {tab === "rel" && (<><div className="mb-5 flex flex-wrap items-center justify-between gap-3"><h1 className="text-2xl font-bold sm:text-3xl">Relatórios</h1><button className={btn.accent} onClick={() => toast.success("Relatório exportado (simulado).")}>Exportar</button></div>
             <div className="grid gap-4 sm:grid-cols-3">
-              {[["Arrecadado em outubro", brl(donors.reduce((s, d) => s + d.valor, 0) * 12)], ["Bens recebidos", `${bens.length + 14} itens`], ["Horas de serviço", `${servs.reduce((s, x) => s + x.horas, 0) + 38} h`]].map(([l, v]) => <div key={l} className="rounded-3xl border bg-card p-5"><p className="text-sm text-muted-foreground">{l}</p><p className="font-display text-2xl font-bold text-primary">{v}</p></div>)}
+              {[["Arrecadado (soma das contribuições)", brl(donors.reduce((s, d) => s + d.valor, 0))], ["Bens recebidos", `${bens.length} itens`], ["Horas de serviço", `${servs.reduce((s, x) => s + x.horas, 0)} h`]].map(([l, v]) => <div key={l} className="rounded-3xl border bg-card p-5"><p className="text-sm text-muted-foreground">{l}</p><p className="font-display text-2xl font-bold text-primary">{v}</p></div>)}
             </div><p className="mt-4 text-sm text-muted-foreground">Resumo do período com os dados cadastrados no sistema.</p></>)}
         </main>
       </div>
