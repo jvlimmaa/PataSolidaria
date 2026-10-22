@@ -93,7 +93,7 @@ function Gestor() {
 
   const enviarLembretes = useMutation({
     mutationFn: async ({ ids, destinatarios, mensagem }: { ids: (string | null)[]; destinatarios: string; mensagem: string }) => {
-      const { error } = await supabase.from("reminders").insert(ids.map((cid) => ({ contribution_id: cid, destinatarios, mensagem })));
+      const { error } = await supabase.from("reminders").insert(ids.map((cid) => ({ contribution_id: cid, destinatarios, mensagem, user_id: userId })));
       if (error) throw error;
     },
     onSuccess: (_d, v) => {
@@ -151,18 +151,18 @@ function Gestor() {
           {tab === "geral" && (<>
             <Head t="Visão geral" />
             <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-              {[["Doadores ativos", donors.filter((d) => statusDe(d.vencimento) === "Ativo").length + 36], ["Renovações em 30 dias", fila.length], ["Bens no mês", bens.length + 14], ["Serviços registrados", servs.length + 9]].map(([l, v]) => (
+              {[["Doadores ativos", donors.filter((d) => statusDe(d.vencimento) === "Ativo").length], ["Renovações em 30 dias", fila.length], ["Bens registrados", bens.length], ["Serviços registrados", servs.length]].map(([l, v]) => (
                 <div key={l} className="rounded-3xl border bg-card p-5"><p className="font-display text-4xl font-bold text-primary">{v}</p><p className="mt-1 text-sm text-muted-foreground">{l}</p></div>
               ))}
             </div>
             <div className="mt-6 rounded-3xl border bg-card p-6">
               <h2 className="mb-4 text-lg font-bold">Contribuições por mês</h2>
-              <svg viewBox="0 0 360 180" className="w-full" role="img" aria-label="Gráfico de barras das contribuições por mês">
-                {meses.map((m, i) => { const h = (m.v / 3000) * 140; return (<g key={m.m}>
-                  <rect x={20 + i * 57} y={150 - h} width="38" height={h} rx="8" fill={i === 5 ? "var(--accent)" : "var(--primary)"} />
+              {porMes.length ? <svg viewBox="0 0 360 180" className="w-full" role="img" aria-label="Gráfico de barras das contribuições por mês">
+                {porMes.map((m, i) => { const h = Math.max((m.v / topo) * 140, 4); return (<g key={m.m + i}>
+                  <rect x={20 + i * 57} y={150 - h} width="38" height={h} rx="8" fill={i === porMes.length - 1 ? "var(--accent)" : "var(--primary)"} />
                   <text x={39 + i * 57} y={168} textAnchor="middle" fontSize="11" fill="var(--muted-foreground)">{m.m}</text>
-                  <text x={39 + i * 57} y={144 - h} textAnchor="middle" fontSize="10" fill="var(--foreground)">{m.v}</text></g>); })}
-              </svg>
+                  <text x={39 + i * 57} y={144 - h} textAnchor="middle" fontSize="10" fill="var(--foreground)">{m.v.toLocaleString("pt-BR")}</text></g>); })}
+              </svg> : <p className="text-sm text-muted-foreground">Nenhuma contribuição registrada ainda — o gráfico aparece assim que houver lançamentos.</p>}
             </div>
           </>)}
 
@@ -200,7 +200,7 @@ function Gestor() {
 
           {tab === "rel" && (<><div className="mb-5 flex flex-wrap items-center justify-between gap-3"><h1 className="text-2xl font-bold sm:text-3xl">Relatórios</h1><button className={btn.accent} onClick={() => toast.success("Relatório exportado (simulado).")}>Exportar</button></div>
             <div className="grid gap-4 sm:grid-cols-3">
-              {[["Arrecadado em outubro", brl(donors.reduce((s, d) => s + d.valor, 0) * 12)], ["Bens recebidos", `${bens.length + 14} itens`], ["Horas de serviço", `${servs.reduce((s, x) => s + x.horas, 0) + 38} h`]].map(([l, v]) => <div key={l} className="rounded-3xl border bg-card p-5"><p className="text-sm text-muted-foreground">{l}</p><p className="font-display text-2xl font-bold text-primary">{v}</p></div>)}
+              {[["Arrecadado (soma das contribuições)", brl(donors.reduce((s, d) => s + d.valor, 0))], ["Bens recebidos", `${bens.length} itens`], ["Horas de serviço", `${servs.reduce((s, x) => s + x.horas, 0)} h`]].map(([l, v]) => <div key={l} className="rounded-3xl border bg-card p-5"><p className="text-sm text-muted-foreground">{l}</p><p className="font-display text-2xl font-bold text-primary">{v}</p></div>)}
             </div><p className="mt-4 text-sm text-muted-foreground">Resumo do período com os dados cadastrados no sistema.</p></>)}
         </main>
       </div>
