@@ -4,7 +4,7 @@ import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { LayoutDashboard, HandCoins, Package, HeartHandshake, BellRing, FileBarChart, Plus, Search, ArrowLeft, LogOut } from "lucide-react";
 import { Logo, Modal, Field, btn, StatusBadge } from "@/components/app/ui-bits";
-import { brl, dataBR, statusDe, meses, type Donor, type Bem, type Servico } from "@/lib/demo-data";
+import { brl, dataBR, statusDe, type Donor, type Bem, type Servico } from "@/lib/demo-data";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuthStateSync, signOut } from "@/lib/auth";
 
@@ -24,6 +24,10 @@ export const Route = createFileRoute("/_authenticated/gestor")({
     const { data: roles } = await supabase.from("user_roles").select("role").eq("user_id", data.user.id);
     if (!roles?.some((r) => r.role === "gestor")) throw redirect({ to: "/usuario" });
   },
+  loader: async () => {
+    const { data } = await supabase.auth.getUser();
+    return { userId: data.user?.id ?? "" };
+  },
   component: Gestor,
 });
 
@@ -35,10 +39,12 @@ const tabs = [
 
 const th = "px-4 py-3 text-left text-xs font-bold uppercase tracking-wide text-muted-foreground";
 const td = "px-4 py-3";
+const MESES = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"];
 const Wrap = ({ children }: { children: React.ReactNode }) => <div className="overflow-x-auto rounded-3xl border bg-card">{children}</div>;
 
 function Gestor() {
   useAuthStateSync();
+  const { userId } = Route.useLoaderData();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const [tab, setTab] = useState<(typeof tabs)[number]["id"]>("geral");
@@ -102,6 +108,18 @@ function Gestor() {
   const lista = useMemo(() => donors.filter((d) => (f === "Todos" || statusDe(d.vencimento) === f) && (d.nome + d.email).toLowerCase().includes(q.toLowerCase())), [donors, q, f]);
   const close = () => { setModal(null); setDupe(false); };
   const fd = (e: React.FormEvent) => { e.preventDefault(); return Object.fromEntries(new FormData(e.target as HTMLFormElement)) as any; };
+
+  // Contribuições somadas por mês de vencimento, para o gráfico de barras.
+  const porMes = useMemo(() => {
+    const soma = new Map<string, number>();
+    for (const d of donors) {
+      const k = d.vencimento.slice(0, 7);
+      if (!/^\d{4}-\d{2}$/.test(k)) continue;
+      soma.set(k, (soma.get(k) ?? 0) + d.valor);
+    }
+    return [...soma.entries()].sort().slice(-6).map(([k, v]) => ({ m: MESES[Number(k.slice(5, 7)) - 1], v }));
+  }, [donors]);
+  const topo = Math.max(...porMes.map((x) => x.v), 1);
 
   const Head = ({ t, action, label, m }: { t: string; action?: boolean; label?: string; m?: typeof modal }) => (
     <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
