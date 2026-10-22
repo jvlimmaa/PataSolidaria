@@ -1,4 +1,4 @@
-import { createFileRoute, Link, redirect } from "@tanstack/react-router";
+import { createFileRoute, Link, redirect, useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -40,6 +40,7 @@ const Wrap = ({ children }: { children: React.ReactNode }) => <div className="ov
 function Gestor() {
   useAuthStateSync();
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
   const [tab, setTab] = useState<(typeof tabs)[number]["id"]>("geral");
   const [modal, setModal] = useState<null | "donor" | "bem" | "serv" | "lembrete">(null);
   const [q, setQ] = useState(""); const [f, setF] = useState("Todos");
@@ -73,7 +74,7 @@ function Gestor() {
 
   const salvar = useMutation({
     mutationFn: async ({ tabela, row }: { tabela: "contributions" | "bens" | "servicos"; row: Record<string, unknown> }) => {
-      const { error } = await supabase.from(tabela).insert(row);
+      const { error } = await (supabase.from(tabela) as any).insert(row);
       if (error) throw error;
     },
     onSuccess: () => {
@@ -118,14 +119,14 @@ function Gestor() {
             <button key={t.id} onClick={() => setTab(t.id)} aria-current={tab === t.id} className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-left font-semibold ${tab === t.id ? "bg-sidebar-primary text-sidebar-primary-foreground" : "hover:bg-sidebar-accent"}`}><t.i className="h-5 w-5" />{t.l}</button>
           ))}
         </nav>
-        <button onClick={() => signOut(queryClient, navigate)} className="rounded-xl px-3 py-2 text-left text-sm font-semibold hover:bg-sidebar-accent">Sair da conta</button>
+        <button onClick={async () => { await signOut(queryClient); navigate({ to: "/auth", replace: true }); }} className="rounded-xl px-3 py-2 text-left text-sm font-semibold hover:bg-sidebar-accent">Sair da conta</button>
         <Link to="/" className="rounded-xl px-3 py-2 text-sm font-semibold hover:bg-sidebar-accent">Voltar ao site</Link>
       </aside>
 
       <div className="min-w-0 flex-1 pb-24 md:pb-0">
         <div className="flex flex-wrap items-center justify-between gap-2 border-b bg-card px-5 py-3">
           <div className="flex items-center gap-2 md:hidden"><Link to="/" aria-label="Voltar ao site" className="rounded-full p-2 hover:bg-muted"><ArrowLeft className="h-5 w-5" /></Link><Logo className="h-9" /></div>
-          <button onClick={() => signOut(queryClient, navigate)} className="inline-flex items-center gap-1 text-sm font-bold"><LogOut className="h-4 w-4" />Sair</button>
+          <button onClick={async () => { await signOut(queryClient); navigate({ to: "/auth", replace: true }); }} className="inline-flex items-center gap-1 text-sm font-bold"><LogOut className="h-4 w-4" />Sair</button>
         </div>
 
         <main className="mx-auto max-w-5xl p-5 sm:p-8">

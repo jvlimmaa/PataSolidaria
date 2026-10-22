@@ -10,13 +10,19 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AcessoRouteImport } from './routes/acesso'
-import { Route as GestorRouteImport } from './routes/gestor'
+import { Route as AuthRouteImport } from './routes/auth'
 import { Route as UsuarioRouteImport } from './routes/usuario'
+import { Route as AuthenticatedGestorRouteImport } from './routes/_authenticated/gestor'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AcessoRoute = AcessoRouteImport.update({
@@ -24,9 +30,9 @@ const AcessoRoute = AcessoRouteImport.update({
   path: '/acesso',
   getParentRoute: () => rootRouteImport,
 } as any)
-const GestorRoute = GestorRouteImport.update({
-  id: '/gestor',
-  path: '/gestor',
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
 const UsuarioRoute = UsuarioRouteImport.update({
@@ -34,38 +40,55 @@ const UsuarioRoute = UsuarioRouteImport.update({
   path: '/usuario',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedGestorRoute = AuthenticatedGestorRouteImport.update({
+  id: '/gestor',
+  path: '/gestor',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/acesso': typeof AcessoRoute
-  '/gestor': typeof GestorRoute
+  '/auth': typeof AuthRoute
   '/usuario': typeof UsuarioRoute
+  '/gestor': typeof AuthenticatedGestorRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/acesso': typeof AcessoRoute
-  '/gestor': typeof GestorRoute
+  '/auth': typeof AuthRoute
   '/usuario': typeof UsuarioRoute
+  '/gestor': typeof AuthenticatedGestorRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/acesso': typeof AcessoRoute
-  '/gestor': typeof GestorRoute
+  '/auth': typeof AuthRoute
   '/usuario': typeof UsuarioRoute
+  '/_authenticated/gestor': typeof AuthenticatedGestorRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/acesso' | '/gestor' | '/usuario'
+  fullPaths: '/' | '/acesso' | '/auth' | '/usuario' | '/gestor'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/acesso' | '/gestor' | '/usuario'
-  id: '__root__' | '/' | '/acesso' | '/gestor' | '/usuario'
+  to: '/' | '/acesso' | '/auth' | '/usuario' | '/gestor'
+  id:
+    | '__root__'
+    | '/'
+    | '/_authenticated'
+    | '/acesso'
+    | '/auth'
+    | '/usuario'
+    | '/_authenticated/gestor'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AcessoRoute: typeof AcessoRoute
-  GestorRoute: typeof GestorRoute
+  AuthRoute: typeof AuthRoute
   UsuarioRoute: typeof UsuarioRoute
 }
 
@@ -78,6 +101,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/acesso': {
       id: '/acesso'
       path: '/acesso'
@@ -85,11 +115,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AcessoRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/gestor': {
-      id: '/gestor'
-      path: '/gestor'
-      fullPath: '/gestor'
-      preLoaderRoute: typeof GestorRouteImport
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/usuario': {
@@ -99,13 +129,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof UsuarioRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/gestor': {
+      id: '/_authenticated/gestor'
+      path: '/gestor'
+      fullPath: '/gestor'
+      preLoaderRoute: typeof AuthenticatedGestorRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedGestorRoute: typeof AuthenticatedGestorRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedGestorRoute: AuthenticatedGestorRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AcessoRoute: AcessoRoute,
-  GestorRoute: GestorRoute,
+  AuthRoute: AuthRoute,
   UsuarioRoute: UsuarioRoute,
 }
 export const routeTree = rootRouteImport
