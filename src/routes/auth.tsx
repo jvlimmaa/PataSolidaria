@@ -26,7 +26,7 @@ export const Route = createFileRoute("/auth")({
   component: AuthPage,
 });
 
-async function landingFor(userId: string): Promise"/gestor" | "/usuario" {
+async function landingFor(userId: string): Promise<"/gestor" | "/usuario"> {
   const { data: roles } = await supabase.from("user_roles").select("role").eq("user_id", userId);
   return roles?.some((r) => r.role === "gestor") ? "/gestor" : "/usuario";
 }
