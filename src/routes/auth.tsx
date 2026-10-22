@@ -66,7 +66,7 @@ function AuthPage() {
     // Redireciona para o Google e volta ao site; a sessão é detectada ao retornar.
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
-      options: { redirectUri: window.location.origin + "/auth/callback" },
+      options: { redirectTo: window.location.origin + "/auth" },
     });
     if (error) toast.error("Não foi possível iniciar o login com Google: " + error.message);
   };

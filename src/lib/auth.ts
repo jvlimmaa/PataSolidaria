@@ -29,9 +29,8 @@ export function useAuthStateSync() {
   }, [queryClient]);
 }
 
-export async function signOut(queryClient: ReturnType<typeof useQueryClient>, navigate: (opts: { to: string; replace?: boolean }) => Promise<void>) {
+export async function signOut(queryClient: ReturnType<typeof useQueryClient>) {
   await queryClient.cancelQueries();
   queryClient.clear();
   await supabase.auth.signOut();
-  await navigate({ to: "/auth", replace: true });
 }
