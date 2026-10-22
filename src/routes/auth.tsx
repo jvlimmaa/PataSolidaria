@@ -64,8 +64,11 @@ function AuthPage() {
 
   const google = async () => {
     // Redireciona para o Google e volta ao site; a sessão é detectada ao retornar.
-    const r = await (await import("@/integrations/lovable")).lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin });
-    if (r.error) toast.error("Não foi possível iniciar o login com Google: " + r.error.message);
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: { redirectUri: window.location.origin + "/auth/callback" },
+    });
+    if (error) toast.error("Não foi possível iniciar o login com Google: " + error.message);
   };
 
   return (
