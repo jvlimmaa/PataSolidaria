@@ -117,7 +117,7 @@ function Gestor() {
       if (!/^\d{4}-\d{2}$/.test(k)) continue;
       soma.set(k, (soma.get(k) ?? 0) + d.valor);
     }
-    return [...soma.entries()].sort().slice(-6).map(([k, v]) => ({ m: MESES[Number(k.slice(5, 7)) - 1], v }));
+    return [...soma.entries()].sort().slice(-6).map(([k, v]) => ({ m: MESES[Number(k.slice(5, 7)) - 1] ?? k.slice(5, 7), v }));
   }, [donors]);
   const topo = Math.max(...porMes.map((x) => x.v), 1);
 

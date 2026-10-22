@@ -29,7 +29,7 @@ export const Route = createFileRoute("/_authenticated/usuario")({
     return {
       userId: u.id,
       email: u.email ?? "",
-      nome: String(u.user_metadata?.nome ?? "").trim() || (u.email ?? "").split("@")[0],
+      nome: String(u.user_metadata?.["nome"] ?? "").trim() || (u.email ?? "").split("@")[0] || "",
     };
   },
   component: Usuario,
