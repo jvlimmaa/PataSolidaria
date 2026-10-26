@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import { ArrowLeft, Chrome } from "lucide-react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
+import { lovable } from "@/integrations/lovable/index";
 import { Logo, Field, btn } from "@/components/app/ui-bits";
 
 export const Route = createFileRoute("/auth")({
@@ -63,12 +64,11 @@ function AuthPage() {
   };
 
   const google = async () => {
-    // Redireciona para o Google e volta ao site; a sessão é detectada ao retornar.
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: { redirectTo: window.location.origin + "/auth" },
-    });
-    if (error) toast.error("Não foi possível iniciar o login com Google: " + error.message);
+    const result = await lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin + "/auth" });
+    if (result.error) { toast.error("Não foi possível entrar com Google: " + result.error.message); return; }
+    if (result.redirected) return;
+    const { data } = await supabase.auth.getUser();
+    if (data.user) navigate({ to: await landingFor(data.user.id), replace: true });
   };
 
   return (
