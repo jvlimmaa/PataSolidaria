@@ -5,7 +5,7 @@ import { ArrowLeft, Chrome } from "lucide-react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
-import { Logo, Field, btn } from "@/components/app/ui-bits";
+import { Logo, Field, PasswordField, btn } from "@/components/app/ui-bits";
 
 export const Route = createFileRoute("/auth")({
   ssr: false,
@@ -90,14 +90,14 @@ function AuthPage() {
         {modo === "entrar" ? (
           <form onSubmit={entrar}>
             <Field label="E-mail" name="email" type="email" required autoComplete="email" />
-            <Field label="Senha" name="senha" type="password" required autoComplete="current-password" />
+            <PasswordField label="Senha" name="senha" required autoComplete="current-password" />
             <button disabled={busy} className={`${btn.primary} w-full`}>{busy ? "Entrando..." : "Entrar"}</button>
           </form>
         ) : (
           <form onSubmit={criar}>
             <Field label="Nome" name="nome" required autoComplete="name" />
             <Field label="E-mail" name="email" type="email" required autoComplete="email" />
-            <Field label="Senha" name="senha" type="password" required minLength={6} autoComplete="new-password" />
+            <PasswordField label="Senha" name="senha" required minLength={6} autoComplete="new-password" />
             <button disabled={busy} className={`${btn.primary} w-full`}>{busy ? "Criando..." : "Criar conta"}</button>
           </form>
         )}

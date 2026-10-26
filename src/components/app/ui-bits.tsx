@@ -1,5 +1,5 @@
-import { useEffect, useRef, type ReactNode } from "react";
-import { X } from "lucide-react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
+import { Eye, EyeOff, X } from "lucide-react";
 import logo from "@/assets/logo.jpeg.asset.json";
 import type { Status } from "@/lib/demo-data";
 
@@ -37,6 +37,27 @@ export const Field = ({ label, ...p }: { label: string } & React.InputHTMLAttrib
     <input {...p} className="mt-1 w-full rounded-xl border border-input bg-background px-3 py-2.5 font-normal" />
   </label>
 );
+
+export const PasswordField = ({ label, ...p }: { label: string } & React.InputHTMLAttributes<HTMLInputElement>) => {
+  const [ver, setVer] = useState(false);
+  return (
+    <label className="mb-3 block text-sm font-semibold">
+      {label}
+      <span className="relative mt-1 block">
+        <input {...p} type={ver ? "text" : "password"} className="w-full rounded-xl border border-input bg-background px-3 py-2.5 pr-11 font-normal" />
+        <button
+          type="button"
+          onClick={() => setVer((v) => !v)}
+          aria-pressed={ver}
+          aria-label={ver ? "Ocultar senha" : "Mostrar senha"}
+          className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full p-1.5 text-muted-foreground transition hover:bg-muted hover:text-foreground"
+        >
+          {ver ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+        </button>
+      </span>
+    </label>
+  );
+};
 
 export const btn = {
   primary: "inline-flex items-center justify-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-bold text-primary-foreground transition hover:opacity-90",
