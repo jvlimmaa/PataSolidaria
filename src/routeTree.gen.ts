@@ -15,6 +15,7 @@ import { Route as AcessoRouteImport } from './routes/acesso'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedGestorRouteImport } from './routes/_authenticated/gestor'
 import { Route as AuthenticatedUsuarioRouteImport } from './routes/_authenticated/usuario'
+import { Route as DoacaoSucessoRouteImport } from './routes/doacao/sucesso'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -45,6 +46,11 @@ const AuthenticatedUsuarioRoute = AuthenticatedUsuarioRouteImport.update({
   path: '/usuario',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const DoacaoSucessoRoute = DoacaoSucessoRouteImport.update({
+  id: '/doacao/sucesso',
+  path: '/doacao/sucesso',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -52,6 +58,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/gestor': typeof AuthenticatedGestorRoute
   '/usuario': typeof AuthenticatedUsuarioRoute
+  '/doacao/sucesso': typeof DoacaoSucessoRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -59,6 +66,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/gestor': typeof AuthenticatedGestorRoute
   '/usuario': typeof AuthenticatedUsuarioRoute
+  '/doacao/sucesso': typeof DoacaoSucessoRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -68,12 +76,14 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/_authenticated/gestor': typeof AuthenticatedGestorRoute
   '/_authenticated/usuario': typeof AuthenticatedUsuarioRoute
+  '/doacao/sucesso': typeof DoacaoSucessoRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/acesso' | '/auth' | '/gestor' | '/usuario'
+  fullPaths:
+    '/' | '/acesso' | '/auth' | '/gestor' | '/usuario' | '/doacao/sucesso'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/acesso' | '/auth' | '/gestor' | '/usuario'
+  to: '/' | '/acesso' | '/auth' | '/gestor' | '/usuario' | '/doacao/sucesso'
   id:
     | '__root__'
     | '/'
@@ -82,6 +92,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/_authenticated/gestor'
     | '/_authenticated/usuario'
+    | '/doacao/sucesso'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -89,6 +100,7 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AcessoRoute: typeof AcessoRoute
   AuthRoute: typeof AuthRoute
+  DoacaoSucessoRoute: typeof DoacaoSucessoRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -135,6 +147,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedUsuarioRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/doacao/sucesso': {
+      id: '/doacao/sucesso'
+      path: '/doacao/sucesso'
+      fullPath: '/doacao/sucesso'
+      preLoaderRoute: typeof DoacaoSucessoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -156,6 +175,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AcessoRoute: AcessoRoute,
   AuthRoute: AuthRoute,
+  DoacaoSucessoRoute: DoacaoSucessoRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

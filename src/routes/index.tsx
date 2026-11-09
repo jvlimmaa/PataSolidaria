@@ -1,9 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { toast } from "sonner";
-import { Menu, X, FileSpreadsheet, CopyX, BellOff, SearchX, HandCoins, Package, HeartHandshake, BellRing, LayoutDashboard, History, Check, ArrowRight, ShieldCheck, Gauge, Repeat, Sprout } from "lucide-react";
+import { Menu, X, FileSpreadsheet, CopyX, BellOff, SearchX, HandCoins, Package, HeartHandshake, BellRing, LayoutDashboard, History, Check, ArrowRight, ShieldCheck, Gauge, Repeat, Sprout, Loader2 } from "lucide-react";
+import { useServerFn } from "@tanstack/react-start";
 import { Logo, btn, Field } from "@/components/app/ui-bits";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { createDonationCheckout } from "@/lib/doacao.functions";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -47,7 +49,7 @@ const Card = ({ icon: I, t, d }: { icon: typeof Package; t: string; d: string })
   </Reveal>
 );
 
-const nav = [["problema", "Problema"], ["solucao", "Solução"], ["funcionalidades", "Funcionalidades"], ["perfis", "Perfis"], ["origem", "Origem"], ["faq", "FAQ"], ["contato", "Contato"]];
+const nav = [["problema", "Problema"], ["solucao", "Solução"], ["funcionalidades", "Funcionalidades"], ["perfis", "Perfis"], ["origem", "Origem"], ["doar", "Doar"], ["faq", "FAQ"], ["contato", "Contato"]];
 
 function Home() {
   const [open, setOpen] = useState(false);
@@ -182,6 +184,10 @@ function Home() {
           <Reveal><p className="max-w-3xl text-lg text-muted-foreground">Soluções como ONGFácil, HYB e Nexus Social já centralizam cadastros de doadores, voluntários e beneficiários e tratam de adequações fiscais. A Pata Solidária foca em outro ponto: a automação do fluxo financeiro, os alertas de renovação e a simplicidade de uso.</p></Reveal>
         </Section>
 
+        <Section id="doar" title="Contribua com o que você tem ou pode." sub="Toda doação faz diferença para os animais. Escolha o valor e doe com segurança pelo cartão." tone>
+          <DoarCard />
+        </Section>
+
         <Section id="faq" title="Perguntas frequentes.">
           <Accordion type="single" collapsible className="max-w-3xl rounded-3xl border bg-card px-6">
             {[
@@ -214,6 +220,50 @@ function Home() {
         </div>
       </footer>
     </div>
+  );
+}
+
+function DoarCard() {
+  const [valor, setValor] = useState("");
+  const [carregando, setCarregando] = useState(false);
+  const iniciarDoacao = useServerFn(createDonationCheckout);
+
+  const doar = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const v = Math.floor(Number(valor));
+    if (!Number.isFinite(v) || v < 1) { toast.error("Informe um valor de pelo menos R$ 1."); return; }
+    setCarregando(true);
+    try {
+      const { url } = await iniciarDoacao({ data: { valor: v } });
+      window.location.href = url;
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Não foi possível iniciar a doação.");
+      setCarregando(false);
+    }
+  };
+
+  return (
+    <Reveal className="mx-auto max-w-lg rounded-3xl border bg-card p-7 text-center shadow-soft">
+      <div className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-accent text-accent-foreground"><HandCoins className="h-7 w-7" /></div>
+      <p className="mt-4 text-muted-foreground">Sem valor mínimo, sem compromisso mensal — doe uma vez, com o quanto puder.</p>
+      <form onSubmit={doar} className="mt-5">
+        <label className="block text-left text-sm font-semibold">Valor da doação (R$)
+          <input type="number" min={1} step={1} required value={valor} onChange={(e) => setValor(e.target.value)} placeholder="Ex: 30"
+            className="mt-1 w-full rounded-xl border border-input bg-background px-3 py-2.5 text-lg font-normal" />
+        </label>
+        <div className="mt-3 flex flex-wrap justify-center gap-2">
+          {[10, 30, 50, 100].map((v) => (
+            <button key={v} type="button" onClick={() => setValor(String(v))}
+              className={`rounded-full border px-4 py-1.5 text-sm font-bold ${valor === String(v) ? "bg-accent text-accent-foreground" : "bg-background"}`}>R$ {v}</button>
+          ))}
+        </div>
+        <button disabled={carregando} className={`${btn.accent} mt-5 w-full disabled:opacity-60`}>
+          {carregando ? <Loader2 className="h-4 w-4 animate-spin" /> : <HeartHandshake className="h-4 w-4" />}
+          {carregando ? "Abrindo pagamento…" : "Doar agora"}
+        </button>
+        <p className="mt-3 text-xs text-muted-foreground">Pagamento processado com segurança pelo Stripe.</p>
+      </form>
+    </Reveal>
   );
 }
 
