@@ -204,19 +204,29 @@ function Home() {
         </Section>
 
         <Section id="contato" title="Fale com a equipe." tone>
-          <form className="max-w-lg rounded-3xl border bg-card p-6" onSubmit={(e) => { e.preventDefault(); toast.success("Mensagem simulada enviada. Obrigado!"); (e.target as HTMLFormElement).reset(); }}>
-            <Field label="Nome" required /><Field label="E-mail" type="email" required />
-            <label className="mb-4 block text-sm font-semibold">Mensagem<textarea required rows={4} className="mt-1 w-full rounded-xl border border-input bg-background px-3 py-2.5 font-normal" /></label>
-            <button className={btn.primary}>Enviar</button>
-            <p className="mt-3 text-xs text-muted-foreground">Formulário visual, sem envio real.</p>
+          <a href="mailto:patasolidariafatec@gmail.com" className="mb-5 inline-block break-all font-bold text-primary">patasolidariafatec@gmail.com</a>
+          <form className="max-w-lg" onSubmit={(e) => {
+            e.preventDefault();
+            const values = new FormData(e.currentTarget);
+            const subject = encodeURIComponent(`Contato Pata Solidária — ${values.get("nome")}`);
+            const body = encodeURIComponent(`Nome: ${values.get("nome")}\nE-mail: ${values.get("email")}\n\n${values.get("mensagem")}`);
+            window.location.href = `mailto:patasolidariafatec@gmail.com?subject=${subject}&body=${body}`;
+          }}>
+            <Field label="Nome" name="nome" required /><Field label="E-mail" name="email" type="email" required />
+            <label className="mb-4 block text-sm font-semibold">Mensagem<textarea name="mensagem" required rows={4} className="mt-1 w-full rounded-xl border border-input bg-background px-3 py-2.5 font-normal" /></label>
+            <button className={btn.primary}>Abrir e-mail</button>
           </form>
         </Section>
       </main>
 
       <footer className="bg-primary px-5 py-10 text-primary-foreground">
         <div className="mx-auto flex max-w-6xl flex-col justify-between gap-4 sm:flex-row sm:items-center">
-          <div><p className="font-display text-xl font-bold">Pata Solidária</p><p className="text-sm opacity-80">Projeto acadêmico — equipe de desenvolvimento.</p></div>
-          <p className="text-sm opacity-80">© 2026 Pata Solidária</p>
+          <div className="min-w-0 max-w-3xl"><p className="font-display text-xl font-bold">Pata Solidária</p><p className="text-sm opacity-80">Projeto acadêmico — equipe de desenvolvimento.</p>
+            <ul className="mt-3 grid gap-x-6 gap-y-1 text-sm sm:grid-cols-2">
+              {["João Victor Lima dos Santos", "Felipe Marinho de Araujo", "Matheus Beccari Caldeira", "Thierry Araújo Cavalheiro", "João Mateus Massayoshi Gomes Tomazin"].map(nome => <li key={nome}>{nome}</li>)}
+            </ul>
+          </div>
+          <p className="shrink-0 text-sm opacity-80">© 2026 Pata Solidária</p>
         </div>
       </footer>
     </div>
