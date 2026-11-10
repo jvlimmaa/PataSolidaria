@@ -25,7 +25,8 @@ export const Route = createFileRoute("/_authenticated/usuario")({
   },
   loader: async () => {
     const { data } = await supabase.auth.getUser();
-    const u = data.user!;
+    const u = data.user;
+    if (!u) throw redirect({ to: "/auth" });
     return {
       userId: u.id,
       email: u.email ?? "",
@@ -214,7 +215,7 @@ function Usuario() {
       </Modal>
 
       <Modal open={modal === "pag"} onClose={close} title="Atualizar forma de pagamento">
-        <form onSubmit={(e) => { const v = fd(e); atualizarPagamento.mutate({ id: ativa!.id, forma: v.forma }); }}>
+        <form onSubmit={(e) => { const v = fd(e); if (ativa) atualizarPagamento.mutate({ id: ativa.id, forma: v.forma }); }}>
           <label className="mb-3 block text-sm font-semibold">Forma de pagamento
             <select name="forma" className="mt-1 w-full rounded-xl border border-input bg-background px-3 py-2.5 font-normal"><option>Cartão de crédito</option><option>PIX recorrente</option><option>Boleto</option></select></label>
           <p className="mb-3 text-sm text-muted-foreground">A renovação será confirmada e o próximo vencimento calculado em 30 dias.</p>

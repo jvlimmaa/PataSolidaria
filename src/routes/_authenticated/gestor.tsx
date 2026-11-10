@@ -7,6 +7,7 @@ import { Logo, Modal, Field, btn, StatusBadge } from "@/components/app/ui-bits";
 import { brl, dataBR, statusDe, type Donor, type Bem, type Servico } from "@/lib/demo-data";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuthStateSync, signOut } from "@/lib/auth";
+import { downloadReportCsv } from "@/lib/report-csv";
 
 export const Route = createFileRoute("/_authenticated/gestor")({
   ssr: false,
@@ -124,14 +125,14 @@ function Gestor() {
   const Head = ({ t, action, label, m }: { t: string; action?: boolean; label?: string; m?: typeof modal }) => (
     <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
       <h1 className="text-2xl font-bold sm:text-3xl">{t}</h1>
-      {action && <button className={btn.accent} onClick={() => setModal(m!)}><Plus className="h-4 w-4" />{label}</button>}
+      {action && <button className={btn.accent} onClick={() => { if (m) setModal(m); }}><Plus className="h-4 w-4" />{label}</button>}
     </div>
   );
 
   return (
     <div className="min-h-screen md:flex">
       <aside className="hidden w-64 shrink-0 flex-col bg-sidebar p-5 text-sidebar-foreground md:flex">
-        <div className="mb-6 rounded-2xl bg-background p-2"><Logo className="h-20 mx-auto" /></div>
+        <div className="mb-6"><Logo className="mx-auto h-auto w-full" /></div>
         <nav aria-label="Gestor" className="flex flex-1 flex-col gap-1">
           {tabs.map((t) => (
             <button key={t.id} onClick={() => setTab(t.id)} aria-current={tab === t.id} className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-left font-semibold ${tab === t.id ? "bg-sidebar-primary text-sidebar-primary-foreground" : "hover:bg-sidebar-accent"}`}><t.i className="h-5 w-5" />{t.l}</button>
@@ -158,7 +159,7 @@ function Gestor() {
             <div className="mt-6 rounded-3xl border bg-card p-6">
               <h2 className="mb-4 text-lg font-bold">Contribuições por mês</h2>
               {porMes.length ? <svg viewBox="0 0 360 180" className="w-full" role="img" aria-label="Gráfico de barras das contribuições por mês">
-                {porMes.map((m, i) => { const h = Math.max((m.v / topo) * 140, 4); return (<g key={m.m + i}>
+                {porMes.map((m, i) => { const h = Math.max((m.v / topo) * 125, 4); return (<g key={m.m + i}>
                   <rect x={20 + i * 57} y={150 - h} width="38" height={h} rx="8" fill={i === porMes.length - 1 ? "var(--accent)" : "var(--primary)"} />
                   <text x={39 + i * 57} y={168} textAnchor="middle" fontSize="11" fill="var(--muted-foreground)">{m.m}</text>
                   <text x={39 + i * 57} y={144 - h} textAnchor="middle" fontSize="10" fill="var(--foreground)">{m.v.toLocaleString("pt-BR")}</text></g>); })}
@@ -198,7 +199,7 @@ function Gestor() {
               {!fila.length && <p className="rounded-3xl border bg-card p-6 text-center text-muted-foreground">Nenhuma renovação pendente. Tudo em dia!</p>}</div>
           </>)}
 
-          {tab === "rel" && (<><div className="mb-5 flex flex-wrap items-center justify-between gap-3"><h1 className="text-2xl font-bold sm:text-3xl">Relatórios</h1><button className={btn.accent} onClick={() => toast.success("Relatório exportado (simulado).")}>Exportar</button></div>
+          {tab === "rel" && (<><div className="mb-5 flex flex-wrap items-center justify-between gap-3"><h1 className="text-2xl font-bold sm:text-3xl">Relatórios</h1><button className={btn.accent} onClick={() => downloadReportCsv(donors, bens, servs)}><FileBarChart className="h-4 w-4" />Exportar CSV</button></div>
             <div className="grid gap-4 sm:grid-cols-3">
               {[["Arrecadado (soma das contribuições)", brl(donors.reduce((s, d) => s + d.valor, 0))], ["Bens recebidos", `${bens.length} itens`], ["Horas de serviço", `${servs.reduce((s, x) => s + x.horas, 0)} h`]].map(([l, v]) => <div key={l} className="rounded-3xl border bg-card p-5"><p className="text-sm text-muted-foreground">{l}</p><p className="font-display text-2xl font-bold text-primary">{v}</p></div>)}
             </div><p className="mt-4 text-sm text-muted-foreground">Resumo do período com os dados cadastrados no sistema.</p></>)}

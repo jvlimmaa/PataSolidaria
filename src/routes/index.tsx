@@ -11,9 +11,9 @@ export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "Pata Solidária — gestão integrada para ONGs" },
-      { name: "description", content: "Centralize doações, bens e serviços da sua ONG e receba alertas automáticos de renovação. Experimente o protótipo." },
+      { name: "description", content: "Acompanhe contribuições, bens e serviços de voluntários na Pata Solidária e apoie a causa animal." },
       { property: "og:title", content: "Pata Solidária — gestão integrada para ONGs" },
-      { property: "og:description", content: "Menos planilhas, mais retenção de doadores. Experimente as telas do Gestor e do Colaborador." },
+      { property: "og:description", content: "Contribuições, bens e serviços em um só lugar. Apoie a causa animal com a Pata Solidária." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -80,7 +80,7 @@ function Home() {
             <div className="reveal">
               <p className="mb-4 inline-block rounded-full bg-secondary px-4 py-1 text-sm font-bold text-primary">Gestão para ONGs de causa animal</p>
               <h1 className="text-4xl font-extrabold leading-tight sm:text-6xl">Centralize e automatize a gestão da sua ONG.</h1>
-              <p className="mt-5 max-w-xl text-lg text-muted-foreground">Doações financeiras, bens e serviços de voluntários em um só lugar — com lembretes automáticos para você não perder nenhum doador.</p>
+              <p className="mt-5 max-w-xl text-lg text-muted-foreground">Contribuições, bens e serviços de voluntários em um só lugar — com acompanhamento dos vencimentos para cuidar de cada doador.</p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <Link to="/acesso" className={btn.accent}>Experimente o sistema <ArrowRight className="h-4 w-4" /></Link>
                 <a href="#problema" className={btn.ghost}>Saiba mais</a>
@@ -110,7 +110,7 @@ function Home() {
             <Reveal className="rounded-3xl bg-primary p-6 text-primary-foreground shadow-soft">
               <p className="mb-3 font-bold">Depois: Pata Solidária</p>
               <ul className="space-y-3">
-                {["Um cadastro único por doador", "Aviso de possível duplicidade", "Lembretes automáticos de renovação", "Histórico completo e rastreável"].map((t) => <li key={t} className="flex gap-2"><Check className="h-5 w-5 shrink-0 text-accent" />{t}</li>)}
+                {["Registros reunidos por doador", "Aviso de possível duplicidade", "Acompanhamento das renovações", "Histórico de contribuições"].map((t) => <li key={t} className="flex gap-2"><Check className="h-5 w-5 shrink-0 text-accent" />{t}</li>)}
               </ul>
             </Reveal>
           </div>
@@ -121,13 +121,13 @@ function Home() {
             <Card icon={HandCoins} t="Gestão de contribuições" d="Doadores mensais e pontuais, valores, formas de pagamento e vencimentos." />
             <Card icon={Package} t="Doações de bens" d="Registre ração, cobertores e outros itens recebidos, com doador e data." />
             <Card icon={HeartHandshake} t="Serviços de colaboradores" d="Horas e atividades de voluntários e colaboradores sempre registradas." />
-            <Card icon={BellRing} t="Alertas e lembretes" d="Mensagens automáticas para doações próximas do vencimento." />
+            <Card icon={BellRing} t="Alertas e lembretes" d="Acompanhe os vencimentos e registre lembretes para seus doadores." />
             <Card icon={LayoutDashboard} t="Painel consolidado" d="Indicadores e evolução das contribuições em uma tela só." />
             <Card icon={History} t="Histórico e rastreabilidade" d="Cada contribuição e cada alteração, fácil de consultar." />
           </div>
         </Section>
 
-        <Section id="perfis" title="Dois perfis, duas telas." sub="Teste agora, com dados fictícios." tone>
+        <Section id="perfis" title="Dois perfis, duas telas." sub="Gestores e colaboradores acompanham seus registros com acesso individual." tone>
           <div className="grid gap-5 md:grid-cols-2">
             {[
               { t: "Gestor da ONG", to: "/gestor", items: ["Visão geral e indicadores", "Cadastro de doadores com checagem de duplicidade", "Bens e serviços", "Envio de lembretes e relatórios"] },
@@ -144,7 +144,7 @@ function Home() {
 
         <Section id="como" title="Como funciona.">
           <ol className="grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
-            {["Cadastro do doador", "Registro das contribuições", "Acompanhamento no painel", "Alerta automático antes do vencimento", "Renovação confirmada"].map((s, i) => (
+            {["Cadastro do doador", "Registro das contribuições", "Acompanhamento no painel", "Consulta dos vencimentos", "Atualização do registro"].map((s, i) => (
               <Reveal key={s} className="rounded-3xl border bg-card p-5">
                 <span className="grid h-10 w-10 place-items-center rounded-full bg-accent font-display text-lg font-bold text-accent-foreground">{i + 1}</span>
                 <p className="mt-3 font-bold">{s}</p>
@@ -191,9 +191,9 @@ function Home() {
         <Section id="faq" title="Perguntas frequentes.">
           <Accordion type="single" collapsible className="max-w-3xl rounded-3xl border bg-card px-6">
             {[
-              ["O sistema já está disponível?", "Este site apresenta um protótipo navegável com dados fictícios, para demonstrar as telas e o fluxo."],
-              ["Os dados do protótipo são reais?", "Não. Nomes, valores e datas são fictícios e nada é salvo."],
-              ["Como funcionam os lembretes?", "O Gestor vê as doações próximas do vencimento e envia lembretes individuais ou em lote. No protótipo, o envio é simulado."],
+              ["O sistema já está disponível?", "Sim. Você pode criar uma conta para acompanhar contribuições, bens e serviços. O acesso de gestor é liberado pela equipe."],
+              ["Meus registros ficam salvos?", "Sim. Os registros ficam salvos na sua conta. O gestor acompanha os dados da ONG e cada colaborador acessa seus próprios registros."],
+              ["Como funcionam os lembretes?", "O gestor acompanha os vencimentos e registra lembretes. O envio por e-mail e WhatsApp ainda não está disponível."],
               ["Como evita cadastros duplicados?", "Ao cadastrar um doador, o sistema avisa se o e-mail já existe na lista."],
               ["Funciona no celular?", "Sim. A tela do Colaborador foi pensada primeiro para o celular."],
               ["Serve só para causa animal?", "Nasceu nesse contexto, mas o fluxo pode atender outras ONGs."],
@@ -245,7 +245,7 @@ function DoarCard() {
   return (
     <Reveal className="mx-auto max-w-lg rounded-3xl border bg-card p-7 text-center shadow-soft">
       <div className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-accent text-accent-foreground"><HandCoins className="h-7 w-7" /></div>
-      <p className="mt-4 text-muted-foreground">Sem valor mínimo, sem compromisso mensal — doe uma vez, com o quanto puder.</p>
+      <p className="mt-4 text-muted-foreground">Sem compromisso mensal — escolha o quanto puder contribuir.</p>
       <form onSubmit={doar} className="mt-5">
         <label className="block text-left text-sm font-semibold">Valor da doação (R$)
           <input type="number" min={1} step={1} required value={valor} onChange={(e) => setValor(e.target.value)} placeholder="Ex: 30"

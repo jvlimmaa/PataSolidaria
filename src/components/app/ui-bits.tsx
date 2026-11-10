@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Eye, EyeOff, X } from "lucide-react";
-import logo from "@/assets/logo.jpeg.asset.json";
+import logo from "@/assets/logo-pata-solidaria-limpa.png.asset.json";
 import type { Status } from "@/lib/demo-data";
 
 export const Logo = ({ className = "h-10" }: { className?: string }) => (
-  <img src={logo.url} alt="Pata Solidária" className={`${className} w-auto mix-blend-multiply`} />
+  <img src={logo.url} alt="Pata Solidária" className={`${className} w-auto`} />
 );
 
 export function Modal({ open, onClose, title, children }: { open: boolean; onClose: () => void; title: string; children: ReactNode }) {
