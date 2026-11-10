@@ -132,7 +132,7 @@ function Gestor() {
   return (
     <div className="min-h-screen md:flex">
       <aside className="hidden w-64 shrink-0 flex-col bg-sidebar p-5 text-sidebar-foreground md:flex">
-        <div className="mb-6"><Logo className="mx-auto h-auto w-full" /></div>
+        <div className="-mx-5 -mt-5 mb-6 bg-secondary px-5 py-3"><Logo className="mx-auto h-auto w-full" /></div>
         <nav aria-label="Gestor" className="flex flex-1 flex-col gap-1">
           {tabs.map((t) => (
             <button key={t.id} onClick={() => setTab(t.id)} aria-current={tab === t.id} className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-left font-semibold ${tab === t.id ? "bg-sidebar-primary text-sidebar-primary-foreground" : "hover:bg-sidebar-accent"}`}><t.i className="h-5 w-5" />{t.l}</button>
