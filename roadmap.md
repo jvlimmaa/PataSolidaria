@@ -1,5 +1,8 @@
 # Roadmap
 
+- [x] Explicar o que falta para a primeira campanha de anúncios
+- [ ] Finalizar primeira campanha Facebook/Instagram — aguardando pagamento e termo Meta, aprovação das artes e medição
+
 - [x] Criar vídeo curto de lançamento para LinkedIn, X ou Product Hunt — MP4 20 segundos, 1080p, animação gráfica com trilha
 
 - [x] Doação com valor livre via Stripe ("Contribua com o que você tem ou pode") — testado: checkout abre com o valor digitado
