@@ -1,8 +1,8 @@
 # Patasolidaria
 
-This project was built with [Lovable](https://lovable.dev).
 
-**Live app**: https://patasolidaria.lovable.app
+
+**Live app**: https://patasolidaria.co
 
 ## Build with Lovable
 
