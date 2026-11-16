@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AcessoRouteImport } from './routes/acesso'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as PrivacidadeRouteImport } from './routes/privacidade'
 import { Route as AuthenticatedGestorRouteImport } from './routes/_authenticated/gestor'
 import { Route as AuthenticatedUsuarioRouteImport } from './routes/_authenticated/usuario'
 import { Route as DoacaoSucessoRouteImport } from './routes/doacao/sucesso'
@@ -36,6 +37,11 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PrivacidadeRoute = PrivacidadeRouteImport.update({
+  id: '/privacidade',
+  path: '/privacidade',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedGestorRoute = AuthenticatedGestorRouteImport.update({
   id: '/gestor',
   path: '/gestor',
@@ -56,6 +62,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/acesso': typeof AcessoRoute
   '/auth': typeof AuthRoute
+  '/privacidade': typeof PrivacidadeRoute
   '/gestor': typeof AuthenticatedGestorRoute
   '/usuario': typeof AuthenticatedUsuarioRoute
   '/doacao/sucesso': typeof DoacaoSucessoRoute
@@ -64,6 +71,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/acesso': typeof AcessoRoute
   '/auth': typeof AuthRoute
+  '/privacidade': typeof PrivacidadeRoute
   '/gestor': typeof AuthenticatedGestorRoute
   '/usuario': typeof AuthenticatedUsuarioRoute
   '/doacao/sucesso': typeof DoacaoSucessoRoute
@@ -74,6 +82,7 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/acesso': typeof AcessoRoute
   '/auth': typeof AuthRoute
+  '/privacidade': typeof PrivacidadeRoute
   '/_authenticated/gestor': typeof AuthenticatedGestorRoute
   '/_authenticated/usuario': typeof AuthenticatedUsuarioRoute
   '/doacao/sucesso': typeof DoacaoSucessoRoute
@@ -81,15 +90,29 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/acesso' | '/auth' | '/gestor' | '/usuario' | '/doacao/sucesso'
+    | '/'
+    | '/acesso'
+    | '/auth'
+    | '/privacidade'
+    | '/gestor'
+    | '/usuario'
+    | '/doacao/sucesso'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/acesso' | '/auth' | '/gestor' | '/usuario' | '/doacao/sucesso'
+  to:
+    | '/'
+    | '/acesso'
+    | '/auth'
+    | '/privacidade'
+    | '/gestor'
+    | '/usuario'
+    | '/doacao/sucesso'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
     | '/acesso'
     | '/auth'
+    | '/privacidade'
     | '/_authenticated/gestor'
     | '/_authenticated/usuario'
     | '/doacao/sucesso'
@@ -100,6 +123,7 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AcessoRoute: typeof AcessoRoute
   AuthRoute: typeof AuthRoute
+  PrivacidadeRoute: typeof PrivacidadeRoute
   DoacaoSucessoRoute: typeof DoacaoSucessoRoute
 }
 
@@ -131,6 +155,13 @@ declare module '@tanstack/react-router' {
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacidade': {
+      id: '/privacidade'
+      path: '/privacidade'
+      fullPath: '/privacidade'
+      preLoaderRoute: typeof PrivacidadeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/gestor': {
@@ -175,6 +206,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AcessoRoute: AcessoRoute,
   AuthRoute: AuthRoute,
+  PrivacidadeRoute: PrivacidadeRoute,
   DoacaoSucessoRoute: DoacaoSucessoRoute,
 }
 export const routeTree = rootRouteImport

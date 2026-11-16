@@ -13,6 +13,8 @@ import { useEffect, type ReactNode } from "react";
 import { Toaster } from "@/components/ui/sonner";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import consentDefaults from "../lib/consent-defaults.js?raw";
+import { CookieBanner, MetaPixelTracker } from "@/components/app/cookie-banner";
 
 function NotFoundComponent() {
   return (
@@ -76,6 +78,7 @@ function ErrorComponent({ error, reset }: ErrorComponentProps) {
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
   head: () => ({
+    scripts: [{ children: consentDefaults }],
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
@@ -127,6 +130,8 @@ function RootComponent() {
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
       <Outlet />
       <Toaster richColors position="top-center" />
+      <CookieBanner />
+      <MetaPixelTracker />
     </QueryClientProvider>
   );
 }

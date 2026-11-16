@@ -226,7 +226,7 @@ function Home() {
               {["João Victor Lima dos Santos", "Felipe Marinho de Araujo", "Matheus Beccari Caldeira", "Thierry Araújo Cavalheiro", "João Mateus Massayoshi Gomes Tomazin"].map(nome => <li key={nome}>{nome}</li>)}
             </ul>
           </div>
-          <p className="shrink-0 text-sm opacity-80">© 2026 Pata Solidária</p>
+          <div className="flex shrink-0 flex-col gap-1 text-sm opacity-80 sm:items-end"><p>© 2026 Pata Solidária</p><Link to="/privacidade" className="underline underline-offset-2">Política de privacidade</Link><CookieSettingsLink /></div>
         </div>
       </footer>
     </div>
