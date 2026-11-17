@@ -50,6 +50,8 @@ export async function syncMetaPixel(): Promise<boolean> {
   if (allowed) {
     loadPixel();
     if (!initialized) {
+      // Sem coleta automática de botões ou campos de formulário.
+      fbq("set", "autoConfig", false, META_PIXEL_ID);
       fbq("init", META_PIXEL_ID, {}, { agent: "lovable" });
       initialized = true;
     } else if (!granted) {

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { needsAnswer, onConsentChange, readChoice, saveChoices, type Purpose } from "@/lib/consent";
-import { isNewAccount, syncMetaPixel, trackMetaPageView, trackMetaRegistration } from "@/lib/meta-pixel";
+import { isNewAccount, trackMetaPageView, trackMetaRegistration } from "@/lib/meta-pixel";
 import { supabase } from "@/integrations/supabase/client";
 import { btn } from "@/components/app/ui-bits";
 
@@ -21,7 +21,7 @@ export function MetaPixelTracker() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   useEffect(() => { void trackMetaPageView(); }, [pathname]);
   useEffect(() => {
-    const off = onConsentChange(() => { void syncMetaPixel(); });
+    const off = onConsentChange(() => { void trackMetaPageView(); });
     const { data } = supabase.auth.onAuthStateChange((event, session) => {
       const u = session?.user;
       if (event === "SIGNED_IN" && u && isNewAccount(u.created_at)) void trackMetaRegistration(u.id);

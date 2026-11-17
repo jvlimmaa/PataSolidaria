@@ -1,7 +1,10 @@
 # Roadmap
 
 - [x] Explicar o que falta para a primeira campanha de anúncios
-- [ ] Finalizar primeira campanha Facebook/Instagram — aguardando pagamento e termo Meta, aprovação das artes e medição
+- [x] Artes e textos da campanha aprovados
+- [x] Medição de cadastros na Meta + aviso de cookies + página de privacidade
+- [ ] Publicar o site com a medição
+- [ ] Criar a primeira campanha Facebook/Instagram — aguardando pagamento e termo de não discriminação na Meta
 
 - [x] Criar vídeo curto de lançamento para LinkedIn, X ou Product Hunt — MP4 20 segundos, 1080p, animação gráfica com trilha
 

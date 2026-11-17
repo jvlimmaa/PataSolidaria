@@ -10,3 +10,4 @@
 <!-- LOVABLE:END -->
 
 - Build manager CSV exports with the browser-safe report-csv module; quote cells and neutralize formula prefixes to safely export user-entered data.
+- Gate every ad tag (Meta Pixel in src/lib/meta-pixel.ts) on `canTrack("advertising")` from src/lib/consent.ts; the banner and settings live in src/components/app/cookie-banner.tsx so visitor choices control all tracking in one place.

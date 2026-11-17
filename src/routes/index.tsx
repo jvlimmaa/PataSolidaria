@@ -6,6 +6,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { Logo, btn, Field } from "@/components/app/ui-bits";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { createDonationCheckout } from "@/lib/doacao.functions";
+import { CookieSettingsLink } from "@/components/app/cookie-banner";
 
 export const Route = createFileRoute("/")({
   head: () => ({
