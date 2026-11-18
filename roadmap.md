@@ -15,6 +15,7 @@
 - [x] Conferir acesso, registros, exportação e checkout nas telas
 - [ ] Ativar cobranças reais — aguardando chave de produção do Stripe
 - [x] Contato com a equipe por e-mail — abre mensagem para patasolidariafatec@gmail.com no aplicativo de e-mail
-- [ ] Envio automático de contato e lembretes — aguardando serviço de envio e canal de WhatsApp
+- [ ] Conectar o domínio de envio de e-mail e o WhatsApp Business
+- [ ] Implementar contatos e lembretes automáticos após configurar os serviços
 - [x] Nomes da equipe para os créditos no rodapé
 - [ ] Trocar a senha fraca do gestor — aguardando uma nova senha escolhida pelo usuário
