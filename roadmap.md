@@ -15,7 +15,10 @@
 - [x] Conferir acesso, registros, exportação e checkout nas telas
 - [ ] Ativar cobranças reais — aguardando chave de produção do Stripe
 - [x] Contato com a equipe por e-mail — abre mensagem para patasolidariafatec@gmail.com no aplicativo de e-mail
-- [ ] Configurar domínio de envio de e-mail — aguardando configuração pelo usuário; nenhum domínio de envio configurado
+- [x] Configurar domínio de envio de e-mail — patasolidaria.co configurado
+- [ ] Verificação do domínio de e-mail — DNS em verificação; envios bloqueados até concluir
+- [x] Preparar envio do formulário de contato para a equipe pelo serviço de e-mail
+- [ ] Verificar entrega real do contato — aguardando domínio verificado e publicação
 - [x] Vincular conexão WhatsApp Business ao projeto — conexão acessível verificada
 - [x] Confirmar número remetente do WhatsApp — usuário confirmou o número da conexão em 2026-11-19
 - [x] Submeter modelo WhatsApp para lembretes — pata_lembrete_vencimento, pt_BR, UTILITY, ID 1127423126843184

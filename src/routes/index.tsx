@@ -7,6 +7,7 @@ import { Logo, btn, Field } from "@/components/app/ui-bits";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { createDonationCheckout } from "@/lib/doacao.functions";
 import { CookieSettingsLink } from "@/components/app/cookie-banner";
+import { sendContactMessage } from '@/lib/contact.functions';
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -54,6 +55,9 @@ const nav = [["problema", "Problema"], ["solucao", "Solução"], ["funcionalidad
 
 function Home() {
   const [open, setOpen] = useState(false);
+  const [contactBusy, setContactBusy] = useState(false);
+  const contactId = useRef<string | null>(null);
+  const sendContact = useServerFn(sendContactMessage);
   return (
     <div>
       <header className="fixed inset-x-0 top-0 z-40 border-b bg-background/90 backdrop-blur">
@@ -206,16 +210,24 @@ function Home() {
 
         <Section id="contato" title="Fale com a equipe." tone>
           <a href="mailto:patasolidariafatec@gmail.com" className="mb-5 inline-block break-all font-bold text-primary">patasolidariafatec@gmail.com</a>
-          <form className="max-w-lg" onSubmit={(e) => {
+          <form className="max-w-lg" onSubmit={async (e) => {
             e.preventDefault();
-            const values = new FormData(e.currentTarget);
-            const subject = encodeURIComponent(`Contato Pata Solidária — ${values.get("nome")}`);
-            const body = encodeURIComponent(`Nome: ${values.get("nome")}\nE-mail: ${values.get("email")}\n\n${values.get("mensagem")}`);
-            window.location.href = `mailto:patasolidariafatec@gmail.com?subject=${subject}&body=${body}`;
+            if (contactBusy) return;
+            const form = e.currentTarget;
+            const values = new FormData(form);
+            contactId.current ??= crypto.randomUUID();
+            setContactBusy(true);
+            try {
+              const result = await sendContact({ data: { nome: String(values.get('nome') ?? ''), email: String(values.get('email') ?? ''), mensagem: String(values.get('mensagem') ?? ''), submissionId: contactId.current } });
+              if (!result.sent) { toast.error('O destinatário não pode receber mensagens agora. Use o contato por e-mail.'); return; }
+              toast.success('Mensagem enviada para a equipe.');
+              form.reset(); contactId.current = null;
+            } catch (error) { toast.error(error instanceof Error ? error.message : 'Não foi possível enviar a mensagem.'); }
+            finally { setContactBusy(false); }
           }}>
             <Field label="Nome" name="nome" required /><Field label="E-mail" name="email" type="email" required />
             <label className="mb-4 block text-sm font-semibold">Mensagem<textarea name="mensagem" required rows={4} className="mt-1 w-full rounded-xl border border-input bg-background px-3 py-2.5 font-normal" /></label>
-            <button className={btn.primary}>Abrir e-mail</button>
+            <button disabled={contactBusy} className={btn.primary}>{contactBusy ? 'Enviando…' : 'Enviar mensagem'}</button>
           </form>
         </Section>
       </main>
