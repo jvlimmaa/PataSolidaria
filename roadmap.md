@@ -15,7 +15,10 @@
 - [x] Conferir acesso, registros, exportação e checkout nas telas
 - [ ] Ativar cobranças reais — aguardando chave de produção do Stripe
 - [x] Contato com a equipe por e-mail — abre mensagem para patasolidariafatec@gmail.com no aplicativo de e-mail
-- [ ] Conectar o domínio de envio de e-mail e o WhatsApp Business
-- [ ] Implementar contatos e lembretes automáticos após configurar os serviços
+- [ ] Configurar domínio de envio de e-mail — aguardando configuração pelo usuário; nenhum domínio de envio configurado
+- [x] Vincular conexão WhatsApp Business ao projeto — conexão acessível verificada
+- [ ] Confirmar número remetente do WhatsApp — aguardando confirmação do usuário
+- [ ] Preparar modelo WhatsApp para lembretes — nenhum modelo encontrado; aguarda confirmação do número e aprovação da Meta
+- [ ] Implementar contatos e lembretes automáticos — aguarda domínio de e-mail e confirmação do WhatsApp; envios ainda não implementados
 - [x] Nomes da equipe para os créditos no rodapé
 - [ ] Trocar a senha fraca do gestor — aguardando uma nova senha escolhida pelo usuário
