@@ -17,8 +17,9 @@
 - [x] Contato com a equipe por e-mail — abre mensagem para patasolidariafatec@gmail.com no aplicativo de e-mail
 - [ ] Configurar domínio de envio de e-mail — aguardando configuração pelo usuário; nenhum domínio de envio configurado
 - [x] Vincular conexão WhatsApp Business ao projeto — conexão acessível verificada
-- [ ] Confirmar número remetente do WhatsApp — aguardando confirmação do usuário
-- [ ] Preparar modelo WhatsApp para lembretes — nenhum modelo encontrado; aguarda confirmação do número e aprovação da Meta
-- [ ] Implementar contatos e lembretes automáticos — aguarda domínio de e-mail e confirmação do WhatsApp; envios ainda não implementados
+- [x] Confirmar número remetente do WhatsApp — usuário confirmou o número da conexão em 2026-11-19
+- [x] Submeter modelo WhatsApp para lembretes — pata_lembrete_vencimento, pt_BR, UTILITY, ID 1127423126843184
+- [ ] Aprovação do modelo WhatsApp — Meta retornou PENDING em 2026-11-19; nenhum envio executado
+- [ ] Implementar contatos e lembretes automáticos — aguarda domínio de e-mail e aprovação do modelo; envios e recebimento de confirmações de entrega ainda não implementados
 - [x] Nomes da equipe para os créditos no rodapé
 - [ ] Trocar a senha fraca do gestor — aguardando uma nova senha escolhida pelo usuário
