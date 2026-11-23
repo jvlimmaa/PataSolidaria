@@ -67,14 +67,14 @@ function Home() {
             {nav.map(([id, l]) => <a key={id} href={`#${id}`} className="hover:text-accent">{l}</a>)}
           </nav>
           <div className="flex items-center gap-2">
-            <Link to="/acesso" className={`${btn.accent} hidden sm:inline-flex`}>Experimente o sistema</Link>
+            <Link to="/acesso" className={`${btn.accent} hidden sm:inline-flex`}> Entrar </Link>
             <button className="rounded-full p-2 lg:hidden" aria-label="Abrir menu" aria-expanded={open} onClick={() => setOpen(!open)}>{open ? <X /> : <Menu />}</button>
           </div>
         </div>
         {open && (
           <nav aria-label="Menu móvel" className="flex flex-col gap-1 border-t bg-background px-5 py-3 lg:hidden">
             {nav.map(([id, l]) => <a key={id} href={`#${id}`} onClick={() => setOpen(false)} className="rounded-xl px-3 py-2 font-semibold hover:bg-muted">{l}</a>)}
-            <Link to="/acesso" className={`${btn.accent} mt-2`}>Experimente o sistema</Link>
+            <Link to="/acesso" className={`${btn.accent} mt-2`}> Entrar </Link>
           </nav>
         )}
       </header>
@@ -87,7 +87,7 @@ function Home() {
               <h1 className="text-4xl font-extrabold leading-tight sm:text-6xl">Centralize e automatize a gestão da sua ONG.</h1>
               <p className="mt-5 max-w-xl text-lg text-muted-foreground">Contribuições, bens e serviços de voluntários em um só lugar — com acompanhamento dos vencimentos para cuidar de cada doador.</p>
               <div className="mt-8 flex flex-wrap gap-3">
-                <Link to="/acesso" className={btn.accent}>Experimente o sistema <ArrowRight className="h-4 w-4" /></Link>
+                <Link to="/acesso" className={btn.accent}> Entrar <ArrowRight className="h-4 w-4" /></Link>
                 <a href="#problema" className={btn.ghost}>Saiba mais</a>
               </div>
             </div>
