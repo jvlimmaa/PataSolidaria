@@ -140,3 +140,4 @@
 @utility shadow-soft { box-shadow: var(--shadow-soft); }
 @utility bg-hero { background-image: var(--gradient-hero); }
 @keyframes pet-float { 0%, 100% { translate: 0 0; } 50% { translate: 0 -10px; } }
+@keyframes paw-step { 0%, 100% { opacity: 0.06; } 15%, 35% { opacity: 0.28; } }
