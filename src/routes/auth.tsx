@@ -6,6 +6,7 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
 import { Logo, Field, PasswordField, btn } from "@/components/app/ui-bits";
+import { AuthBackground } from "@/components/app/auth-background";
 
 export const Route = createFileRoute("/auth")({
   ssr: false,
@@ -72,7 +73,9 @@ function AuthPage() {
   };
 
   return (
-    <main className="bg-hero flex min-h-screen flex-col items-center px-5 py-8">
+    <main className="bg-hero relative flex min-h-screen flex-col items-center overflow-hidden px-5 py-8">
+      <AuthBackground />
+      <div className="relative z-10 flex w-full flex-col items-center">
       <div className="flex w-full max-w-md items-center justify-between">
         <Link to="/" className="inline-flex items-center gap-2 text-sm font-bold"><ArrowLeft className="h-4 w-4" /> Voltar ao site</Link>
       </div>
@@ -108,6 +111,7 @@ function AuthPage() {
       <p className="mt-4 max-w-md text-center text-sm text-muted-foreground">
         Ao criar conta no site, você entra como Colaborador/Doador. O acesso ao painel do Gestor é liberado pela equipe.
       </p>
+      </div>
     </main>
   );
 }
